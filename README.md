@@ -16,6 +16,30 @@ Install
   yarn add loopback-softdelete
 ```
 
+
+SERVER CONFIG
+=============
+
+Add the `mixins` property to your `server/model-config.json`:
+
+```json
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "../node_modules/loopback-softdelete",
+      "../common/mixins"
+    ]
+  }
+}
+```
+
 Configure
 ----------
 
