@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/loopback-softdelete.svg)](https://badge.fury.io/js/loopback-softdelete)
+
 Loopback SoftDelete
 =============
 
