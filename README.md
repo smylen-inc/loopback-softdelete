@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/loopback-softdelete.svg)](https://badge.fury.io/js/loopback-softdelete)
+[![NPM](https://nodei.co/npm/loopback-softdelete.png?compact=true)](https://npmjs.org/package/loopback-softdelete)
 
 Loopback SoftDelete
 =============
