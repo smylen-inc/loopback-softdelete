@@ -16,9 +16,8 @@ Install
   yarn add loopback-softdelete
 ```
 
-
-SERVER CONFIG
-=============
+Configure
+----------
 
 Add the `mixins` property to your `server/model-config.json`:
 
@@ -39,9 +38,6 @@ Add the `mixins` property to your `server/model-config.json`:
   }
 }
 ```
-
-Configure
-----------
 
 To use with your Models add the `mixins` attribute to the definition object of your model config.
 
