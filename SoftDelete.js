@@ -10,30 +10,46 @@
 module.exports = function (Model, options) {
     Model.defineProperty('deletedAt', {
         type: Date,
-        required: false
+        required: false,
+        mysql: {
+            columnName: "deleted_at",
+            dataType: "timestamp",
+            dataLength: null,
+            dataPrecision: null,
+            dataScale: null,
+            nullable: "Y"
+        }
     });
 
     Model.defineProperty('isDeleted', {
         type: Boolean,
         required: true,
-      default: false
+        default: false,
+        mysql: {
+            columnName: "is_deleted",
+            dataType: "tinyint",
+            dataLength: null,
+            dataPrecision: 1,
+            dataScale: 0,
+            nullable: "Y"
+        }
     });
 
     /**
      * Watches destroyAll(), deleteAll(), destroyById() , deleteById(), prototype.destroy(), prototype.delete() methods
      * and instead of deleting object, sets properties deletedAt and isDeleted.
      */
-    Model.observe('before delete', function(ctx, next) {
+    Model.observe('before delete', function (ctx, next) {
         if (ctx.where === undefined) {
-          ctx.where = { 'isDeleted': false };
+            ctx.where = {'isDeleted': false};
         } else {
-          ctx.where = { and: [ctx.where, { 'isDeleted': false }] };
+            ctx.where = {and: [ctx.where, {'isDeleted': false}]};
         }
 
         Model.updateAll(ctx.where, {deletedAt: new Date(), isDeleted: true}).then(function (result) {
-          next(null);
+            next(null);
         }).catch(function (error) {
-          next(error);
+            next(error);
         });
     });
 
@@ -42,7 +58,7 @@ module.exports = function (Model, options) {
      * if there is already in query isDeleted property, then we do not modify query
      */
     Model.observe('access', function logQuery(ctx, next) {
-        if(JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1) {
+        if (JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1) {
             ctx.query.where.isDeleted = false;
         }
         next();
