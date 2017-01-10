@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/loopback-softdelete.png?compact=true)](https://npmjs.org/package/loopback-softdelete)
+
 Loopback SoftDelete
 =============
 
