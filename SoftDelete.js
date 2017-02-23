@@ -12,7 +12,7 @@ module.exports = function (Model, options) {
         type: Date,
         required: false,
         mysql: {
-            columnName: "deleted_at",
+            columnName: "deletedAt",
             dataType: "timestamp",
             dataLength: null,
             dataPrecision: null,
@@ -26,7 +26,7 @@ module.exports = function (Model, options) {
         required: true,
         default: false,
         mysql: {
-            columnName: "is_deleted",
+            columnName: "isDeleted",
             dataType: "tinyint",
             dataLength: null,
             dataPrecision: 1,
@@ -50,7 +50,8 @@ module.exports = function (Model, options) {
      * if there is already in query isDeleted property, then we do not modify query
      */
     Model.observe('access', function logQuery(ctx, next) {
-        if (JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1) {
+        if (!ctx.query.isDeleted && (!ctx.query.where || ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1)) {
+            if (!ctx.query.where) ctx.query.where = {};
             ctx.query.where.isDeleted = false;
         }
         next();
