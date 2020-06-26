@@ -8,16 +8,17 @@
  */
 
 module.exports = function (Model, options) {
+
     Model.defineProperty('deletedAt', {
         type: Date,
         required: false,
         mysql: {
-            columnName: "deletedAt",
-            dataType: "timestamp",
+            columnName: 'deletedAt',
+            dataType: 'timestamp',
             dataLength: null,
             dataPrecision: null,
             dataScale: null,
-            nullable: "Y"
+            nullable: 'Y'
         }
     });
 
@@ -26,12 +27,12 @@ module.exports = function (Model, options) {
         required: true,
         default: false,
         mysql: {
-            columnName: "isDeleted",
-            dataType: "tinyint",
+            columnName: 'isDeleted',
+            dataType: 'tinyint',
             dataLength: null,
             dataPrecision: 1,
             dataScale: 0,
-            nullable: "Y"
+            nullable: 'Y'
         }
     });
 
@@ -40,7 +41,7 @@ module.exports = function (Model, options) {
      * and instead of deleting object, sets properties deletedAt and isDeleted.
      */
     Model.observe('before delete', async function (ctx, next) {
-        return Model.updateAll(ctx.where, {deletedAt: new Date(), isDeleted: true});
+        return Model.updateAll(ctx.where, { deletedAt: new Date(), isDeleted: true });
     });
 
     Model.deleteById = async function (id) {
