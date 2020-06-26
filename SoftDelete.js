@@ -39,21 +39,47 @@ module.exports = function (Model, options) {
      * Watches destroyAll(), deleteAll(), destroyById() , deleteById(), prototype.destroy(), prototype.delete() methods
      * and instead of deleting object, sets properties deletedAt and isDeleted.
      */
-    Model.observe('before delete', function (ctx, next) {
-        Model.updateAll(ctx.where, {deletedAt: new Date(), isDeleted: true}).then(function (result) {
-            next(null);
-        });
+    Model.observe('before delete', async function (ctx, next) {
+        return Model.updateAll(ctx.where, {deletedAt: new Date(), isDeleted: true});
     });
 
+    Model.deleteById = async function (id) {
+        return Model.updateAll({ id }, { deletedAt: new Date(), isDeleted: true });
+    };
+
+    Model.destroyById = async function (id) {
+        return Model.updateAll({ id }, { deletedAt: new Date(), isDeleted: true });
+    };
+
     /**
-     * When ever model tries to access data, we add by default isDeleted: false to where query
-     * if there is already in query isDeleted property, then we do not modify query
+     * Intercepts the data access request and modifies the query to either include or exclude deleted records.
+     * Deleted records will be included if "isDeleted" is set to the boolean TRUE at the root level of the query object.
+     * The query will not be modified if the "isDeleted" property has been added to the query already.
+     * In all other cases, deleted records will be excluded.
+     *
+     * Note: a record is said to be deleted <=> it's isDeleted property is set to a truthy value.
      */
     Model.observe('access', function logQuery(ctx, next) {
-        if (!ctx.query.isDeleted && (!ctx.query.where || ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1)) {
-            if (!ctx.query.where) ctx.query.where = {};
-            ctx.query.where.isDeleted = false;
+        if (ctx.query.isDeleted === true) {
+            return next();
         }
-        next();
+
+        if (typeof ctx.query.where === 'undefined') {
+            ctx.query.where = {};
+        }
+
+        let whereString = JSON.stringify(ctx.query.where);
+
+        if (whereString.indexOf('isDeleted') !== -1) {
+            return next();
+        }
+
+        if (typeof ctx.query.where.id !== 'undefined') {
+            return next();
+        }
+
+        ctx.query.where.isDeleted = false;
+
+        return next();
     });
 };
