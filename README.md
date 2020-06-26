@@ -1,5 +1,3 @@
-[![NPM](https://nodei.co/npm/loopback-softdelete.png?compact=true)](https://npmjs.org/package/loopback-softdelete)
-
 Loopback SoftDelete
 =============
 
@@ -60,7 +58,7 @@ To use with your Models add the `mixins` attribute to the definition object of y
   },
 ```
 
-Retrieving deleted entities
+Retrieving soft-deleted entities
 ---------------------------
 
 To run queries that include deleted items in the response, add `{ isDeleted: true }` to the query object (at the same level as `where`, `include` etc).
