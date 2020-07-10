@@ -75,11 +75,16 @@ module.exports = function (Model, options) {
             return next();
         }
 
+        // If the ID is provided, then direct access is assumed and we let it go through.
         if (typeof ctx.query.where.id !== 'undefined') {
             return next();
         }
 
-        ctx.query.where.isDeleted = false;
+        if (ctx.query.where.and) {
+            ctx.query.where.and.push({ isDeleted: false });
+        } else {
+            ctx.query.where.isDeleted = false;
+        }
 
         return next();
     });
